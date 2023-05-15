@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     public AudioClip deathClip; // 사망 시 재생할 오디오 클립
     public float jumpForce = 700f; // 점프 힘
-    private int jumpConunt = 0; // 누적 점프 횟수
+    private int jumpCount = 0; // 누적 점프 횟수
     private bool isGrounded = false; // 바닥에 닿았는지 나타냄
     private bool isDead = false; // 사망상태
 
@@ -29,10 +29,10 @@ public class PlayerController : MonoBehaviour
             return;
         }
             // 마우스 왼쪽 버튼을 누렀으며 && 최대 점프 횟수(2)에 도달하지 않았다면
-            if (Input.GetMouseButtonDown(0) && jumpConunt <2)
+            if (Input.GetMouseButtonDown(0) && jumpCount <2)
             {
                 // 점프 횟수 증가
-                jumpConunt++;
+                jumpCount++;
                 // 점프 직전에 속도를 순간적으로 제로(0,0)로 변경
                 playerRigidbody.velocity = Vector2.zero;
                 // 리지드바디에 위쪽으로 힘 주기
@@ -75,13 +75,20 @@ public class PlayerController : MonoBehaviour
         }
     }
    
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision) // 바닥에 닿았음을 감지하는 처리
     {
-        // 바닥에 닿았음을 감지하는 처리
+        //어떤 콜라이더와 닿았으며, 충돌 표면이 위쪽을 보고 있으면
+        if (collision.contacts[0].normal.y>0.7f)
+        {
+            //isGrounded를 true로 변경하고, 누적 점프 횟수를 0으로 릿셋
+            isGrounded = true;
+            jumpCount = 0;
+        }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D collision) // 바닥에서 벗어났음을 감지하는 처리
     {
-        // 바닥에서 벗어났음을 감지하는 처리
+        // 어떤 콜라이더에서 떼어진 경우 isGrounded를 false로 변경
+        isGrounded = false;
     }
 }
