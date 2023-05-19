@@ -64,6 +64,9 @@ public class PlayerController : MonoBehaviour
         playerRigidbody.velocity = Vector2.zero;
         //사망 상태로 true로 변경
         isDead = true;
+
+        //게임매니저의 게임오버 처리 실행
+        GameManager.instance.OnPlayerDead();
     }
     
     private void OnTriggerExit2D(Collider2D other) //트리거 콜라이더를 가진 장애물과의 충돌을 감지
